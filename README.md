@@ -98,10 +98,10 @@ app / platform
 
 ## Documentation
 
-- **[Design Specification](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_design_v0_1.md)** - Architecture and interfaces
-- **[Development Plan](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_dev_plan_v0_1.md)** - Implementation roadmap
-- **[Testing Plan](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_testing_plan_v0_1.md)** - Acceptance criteria
-- **[Protocol Specification](https://github.com/schadauer/human-agency-protocol/blob/main/content/0.1/protocol.md)** - HAP v0.1
+- **[Design Specification](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_design_v0_1.md)** - Architecture and interfaces
+- **[Development Plan](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_dev_plan_v0_1.md)** - Implementation roadmap
+- **[Testing Plan](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_testing_plan_v0_1.md)** - Acceptance criteria
+- **[Protocol Specification](https://github.com/humanagencyprotocol/protocol/blob/main/content/0.1/protocol.md)** - HAP v0.1
 
 ---
 
@@ -127,7 +127,7 @@ app / platform
 
 ```bash
 # Clone repository
-git clone https://github.com/schadauer/hap-sdk-typescript.git
+git clone https://github.com/humanagencyprotocol/hap-sdk-typescript.git
 cd hap-sdk-typescript
 
 # Install dependencies
@@ -189,7 +189,7 @@ Apache-2.0 - see [LICENSE](./LICENSE)
 
 ## Related Projects
 
-- **[Human Agency Protocol](https://github.com/schadauer/human-agency-protocol)** - Core protocol specification
+- **[Human Agency Protocol](https://github.com/humanagencyprotocol/protocol)** - Core protocol specification
 - **HAP Python SDK** (coming soon) - `hap-sdk-python`
 - **HAP Go SDK** (coming soon) - `hap-sdk-go`
 
@@ -197,7 +197,7 @@ Apache-2.0 - see [LICENSE](./LICENSE)
 
 ## Support
 
-- **Issues:** [GitHub Issues](https://github.com/schadauer/hap-sdk-typescript/issues)
+- **Issues:** [GitHub Issues](https://github.com/humanagencyprotocol/hap-sdk-typescript/issues)
 - **Protocol Spec:** [humanagencyprotocol.org](https://humanagencyprotocol.org)
 - **Email:** [Contact form on website]
 

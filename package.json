@@ -38,10 +38,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/schadauer/hap-sdk-typescript"
+    "url": "https://github.com/humanagencyprotocol/hap-sdk-typescript"
   },
   "bugs": {
-    "url": "https://github.com/schadauer/hap-sdk-typescript/issues"
+    "url": "https://github.com/humanagencyprotocol/hap-sdk-typescript/issues"
   },
   "homepage": "https://humanagencyprotocol.org",
   "author": "Human Agency Protocol Contributors",
