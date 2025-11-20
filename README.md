@@ -1,0 +1,206 @@
+# HAP SDK (TypeScript)
+
+TypeScript/JavaScript SDK for the [Human Agency Protocol](https://humanagencyprotocol.org).
+
+**Version:** 0.1.0
+**Protocol Version:** 0.1
+**Status:** Development
+
+---
+
+## What is HAP?
+
+The Human Agency Protocol enforces mandatory human checkpoints in AI systems. AI cannot proceed, escalate, or interpret ambiguous goals until it receives explicit human meaning and direction.
+
+**Core mechanism: Stop → Ask → Proceed**
+
+This SDK provides:
+1. **Protocol compliance** - Integration with HAP Service Providers
+2. **Local optimization** - Tools to improve question-asking over time (privacy-preserving)
+
+---
+
+## Installation
+
+```bash
+npm install hap-sdk
+```
+
+---
+
+## Quick Start
+
+```typescript
+import { HapClient, StopGuard } from 'hap-sdk';
+
+// 1. Create HAP client
+const hapClient = new HapClient({
+  endpoint: process.env.HAP_ENDPOINT!,
+  apiKey: process.env.HAP_API_KEY!,
+});
+
+// 2. Implement local QuestionEngine
+const questionEngine = {
+  async generateQuestion(context: any, spec: QuestionSpec): Promise<string> {
+    // Your local LLM or rule system
+    return myLocalLLM.generateQuestion(context, spec);
+  },
+};
+
+// 3. Use StopGuard in your conversation flow
+const stopGuard = new StopGuard(hapClient, questionEngine);
+
+async function handleUserInput(context: any) {
+  const inquiryReq = detectStopCondition(context);
+
+  const { clarified, question } = await stopGuard.ensureClarified(
+    context,
+    inquiryReq
+  );
+
+  if (!clarified && question) {
+    // Show question to user, wait for answer
+    const answer = await askUser(question);
+    const updatedContext = updateContextWithAnswer(context, answer);
+
+    // Send structural feedback to HAP
+    await hapClient.sendFeedback({
+      blueprintId: "phase-progress",
+      stopResolved: outcome.stopResolved,
+    });
+  }
+}
+```
+
+**Key principle:** HAP never sees your context, questions, or answers. Only structural signals.
+
+---
+
+## Architecture
+
+```
+app / platform
+   │
+   ├── hap-sdk
+   │     ├── hap-client         (protocol integration)
+   │     ├── types              (structural types)
+   │     ├── question-spec      (blueprint mapping)
+   │     ├── runtime-guards     (stop/ask/proceed enforcement)
+   │     └── metrics            (local optimization)
+   │
+   └── local-ai
+         ├── gap-detector
+         ├── question-engine    (your LLM/rules)
+         └── optimization       (your strategy)
+```
+
+---
+
+## Documentation
+
+- **[Design Specification](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_design_v0_1.md)** - Architecture and interfaces
+- **[Development Plan](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_dev_plan_v0_1.md)** - Implementation roadmap
+- **[Testing Plan](https://github.com/schadauer/human-agency-protocol/blob/main/doc/hap_sdk_testing_plan_v0_1.md)** - Acceptance criteria
+- **[Protocol Specification](https://github.com/schadauer/human-agency-protocol/blob/main/content/0.1/protocol.md)** - HAP v0.1
+
+---
+
+## Features
+
+- ✅ **Type-safe** - Full TypeScript support with strict types
+- ✅ **Privacy-first** - No semantic content leaves your system
+- ✅ **Protocol enforcement** - Stop→Ask→Proceed guaranteed
+- ✅ **Retry & circuit breaker** - Resilient network handling
+- ✅ **Local optimization** - Improve question quality over time
+- ✅ **Framework agnostic** - Works with any JS/TS environment
+
+---
+
+## Requirements
+
+- Node.js 18+
+- TypeScript 5.0+ (for development)
+
+---
+
+## Development
+
+```bash
+# Clone repository
+git clone https://github.com/schadauer/hap-sdk-typescript.git
+cd hap-sdk-typescript
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Build
+npm run build
+
+# Type check
+npm run type-check
+
+# Lint
+npm run lint
+```
+
+---
+
+## Examples
+
+See the [examples/](./examples) directory for:
+- Basic Node.js integration
+- Next.js API route example
+- Error handling patterns
+
+---
+
+## Version Mapping
+
+| SDK Version | Protocol Version | Status |
+|-------------|------------------|--------|
+| 0.1.x       | 0.1              | Development |
+| 0.2.x       | 0.1              | Planned (enforcement hardening) |
+
+---
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+**Development process:**
+1. Follow design specs in main protocol repo
+2. All tests must pass (coverage ≥ 85%)
+3. Security tests must pass (no API key leaks, no semantic content)
+4. Update CHANGELOG.md
+
+---
+
+## License
+
+Apache-2.0 - see [LICENSE](./LICENSE)
+
+---
+
+## Related Projects
+
+- **[Human Agency Protocol](https://github.com/schadauer/human-agency-protocol)** - Core protocol specification
+- **HAP Python SDK** (coming soon) - `hap-sdk-python`
+- **HAP Go SDK** (coming soon) - `hap-sdk-go`
+
+---
+
+## Support
+
+- **Issues:** [GitHub Issues](https://github.com/schadauer/hap-sdk-typescript/issues)
+- **Protocol Spec:** [humanagencyprotocol.org](https://humanagencyprotocol.org)
+- **Email:** [Contact form on website]
+
+---
+
+**AI Governance. Human Control.**
