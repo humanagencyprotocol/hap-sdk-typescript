@@ -1,0 +1,13 @@
+{
+  "fixture_version": "0.1.0",
+  "protocol_version": "0.1",
+  "generated": "2025-11-20",
+  "feedback": {
+    "blueprintId": "depth-session",
+    "patternId": "reflect-meaning-deepen-02",
+    "agencyMode": "reflective",
+    "stopResolved": true,
+    "recognitionConfirms": 2,
+    "reflectionCycles": 3
+  }
+}

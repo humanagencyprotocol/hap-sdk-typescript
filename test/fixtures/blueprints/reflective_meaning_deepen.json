@@ -1,0 +1,22 @@
+{
+  "fixture_version": "0.1.0",
+  "protocol_version": "0.1",
+  "generated": "2025-11-20",
+  "blueprint": {
+    "id": "reflect-meaning-deepen-02",
+    "intent": "deepen understanding through reflection",
+    "ladderStage": "meaning",
+    "agencyMode": "reflective",
+    "targetStructures": ["object_of_discussion", "nuance", "context"],
+    "constraints": {
+      "tone": "probing",
+      "addressing": "individual"
+    },
+    "renderHint": "explore the layers of meaning beneath the surface",
+    "examples": [
+      "What does this really mean to you?",
+      "When you say that, what are you really getting at?"
+    ],
+    "stopCondition": "meaning"
+  }
+}

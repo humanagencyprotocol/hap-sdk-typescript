@@ -1,0 +1,22 @@
+{
+  "fixture_version": "0.1.0",
+  "protocol_version": "0.1",
+  "generated": "2025-11-20",
+  "blueprint": {
+    "id": "collab-meaning-clarify-01",
+    "intent": "reduce semantic drift",
+    "ladderStage": "meaning",
+    "agencyMode": "convergent",
+    "targetStructures": ["object_of_discussion", "in_out_boundary"],
+    "constraints": {
+      "tone": "facilitative",
+      "addressing": "group"
+    },
+    "renderHint": "ask for the thing, not for opinions about the thing",
+    "examples": [
+      "Are we talking about the same issue?",
+      "What exactly are we trying to clarify here?"
+    ],
+    "stopCondition": "meaning"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "fixture_version": "0.1.0",
+  "protocol_version": "0.1",
+  "generated": "2025-11-20",
+  "feedback": {
+    "blueprintId": "phase-progress",
+    "patternId": "collab-meaning-clarify-01",
+    "agencyMode": "convergent",
+    "stopResolved": true,
+    "previousPhase": "meaning",
+    "currentPhase": "purpose",
+    "turnsDelta": -2
+  }
+}
