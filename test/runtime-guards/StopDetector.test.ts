@@ -11,10 +11,7 @@ import {
   createManualDetector,
   createDetectorWithStrategy,
 } from "../../src/runtime-guards/StopDetector";
-import type {
-  StopDetectionStrategy,
-  StopAnalysis,
-} from "../../src/runtime-guards/StopDetector";
+import type { StopDetectionStrategy } from "../../src/runtime-guards/StopDetector";
 import { ValidationError } from "../../src/types/errors";
 
 describe("StopDetector", () => {

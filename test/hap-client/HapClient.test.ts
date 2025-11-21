@@ -329,7 +329,7 @@ describe("HapClient Functional Tests", () => {
         stopTrigger: true,
       };
 
-      httpClient.requestInquiryBlueprint(request);
+      void httpClient.requestInquiryBlueprint(request);
 
       // Verify HTTPS was used
       expect(mockFetch).toHaveBeenCalledWith(

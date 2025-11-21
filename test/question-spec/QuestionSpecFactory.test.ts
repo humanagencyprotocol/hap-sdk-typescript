@@ -237,8 +237,8 @@ describe("QuestionSpecFactory", () => {
 
     it("should preserve other fields when transforming", () => {
       const factory = new QuestionSpecFactory({
-        toneTransformer: (tone) => "probing",
-        addressingTransformer: (addr) => "group",
+        toneTransformer: (_tone) => "probing",
+        addressingTransformer: (_addr) => "group",
       });
 
       // Use a fresh copy to avoid mutation from other tests

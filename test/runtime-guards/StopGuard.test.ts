@@ -15,7 +15,7 @@ import type {
   QuestionEngine,
   QuestionSpec,
 } from "../../src/types";
-import { NetworkError, ValidationError } from "../../src/types";
+import { ValidationError } from "../../src/types";
 
 // Mock fetch globally
 const mockFetch = vi.fn();

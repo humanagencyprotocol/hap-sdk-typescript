@@ -53,7 +53,7 @@ describe("E2E Tests - Example Integrations", () => {
       });
 
       const questionEngine: QuestionEngine = {
-        async generateQuestion(context: unknown, spec: QuestionSpec) {
+        async generateQuestion(context: unknown, _spec: QuestionSpec) {
           const ctx = context as any;
           return `What do you mean by "${ctx.userInput}"?`;
         },
@@ -94,7 +94,7 @@ describe("E2E Tests - Example Integrations", () => {
 
       // 5. Simulate user answer
       const userAnswer = "I want to build a dashboard";
-      const updatedContext = {
+      const _updatedContext = {
         ...context,
         clarification: userAnswer,
       };

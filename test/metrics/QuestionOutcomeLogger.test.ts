@@ -107,7 +107,7 @@ describe("QuestionOutcomeLogger", () => {
       const outcome = createOutcome();
 
       // @ts-expect-error - cannot add semantic field
-      const invalid = { ...outcome, userAnswer: "semantic content" };
+      const _invalid = { ...outcome, userAnswer: "semantic content" };
 
       // Even if we bypass TypeScript, the logger still works
       expect(outcome).toBeDefined();
