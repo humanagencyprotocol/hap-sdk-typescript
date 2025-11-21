@@ -12,7 +12,12 @@
  * @packageDocumentation
  */
 
-import type { InquiryBlueprint, InquiryRequest, FeedbackPayload } from "../types";
+import type {
+  InquiryBlueprint,
+  InquiryRequest,
+  FeedbackPayload,
+  HapProvider,
+} from "../types";
 import {
   InquiryBlueprintSchema,
   InquiryRequestSchema,
@@ -60,8 +65,10 @@ type CircuitState = "closed" | "open" | "half-open";
 
 /**
  * HAP Client for interacting with HAP Service Provider
+ *
+ * Implements HapProvider interface for production use with certified endpoints.
  */
-export class HapClient {
+export class HapClient implements HapProvider {
   private readonly endpoint: string;
   private readonly apiKey: string;
   private readonly timeout: number;

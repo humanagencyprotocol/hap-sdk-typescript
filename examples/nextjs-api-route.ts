@@ -33,14 +33,14 @@ const HAP_API_KEY = process.env.HAP_API_KEY!;
 // Singleton Instances (reused across requests)
 // ============================================================================
 
-let hapClient: HapClient;
+let hapProvider: HapClient;
 let stopGuard: StopGuard;
 let detector: StopDetector;
 let metrics: QuestionOutcomeLogger;
 
 function initializeSDK() {
-  if (!hapClient) {
-    hapClient = new HapClient({
+  if (!hapProvider) {
+    hapProvider = new HapClient({
       endpoint: HAP_ENDPOINT,
       apiKey: HAP_API_KEY,
     });
@@ -56,7 +56,7 @@ function initializeSDK() {
     };
 
     stopGuard = new StopGuard({
-      client: hapClient,
+      provider: hapProvider,
       questionEngine,
       middleware: [
         {
@@ -169,8 +169,8 @@ export default async function handler(
         timestamp: Date.now(),
       });
 
-      // Send feedback to HAP
-      await hapClient.sendFeedback({
+      // Send feedback to HAP Provider
+      await hapProvider.sendFeedback({
         blueprintId: clarification.blueprintId,
         patternId: "api-clarification",
         agencyMode: "convergent",

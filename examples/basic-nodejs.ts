@@ -88,9 +88,9 @@ async function main() {
   console.log("HAP SDK - Basic Node.js Example");
   console.log("=".repeat(70));
 
-  // 1. Initialize HAP Client
-  console.log("\n[1] Initializing HAP Client...");
-  const hapClient = new HapClient({
+  // 1. Initialize HAP Provider
+  console.log("\n[1] Initializing HAP Provider (production)...");
+  const hapProvider = new HapClient({
     endpoint: HAP_ENDPOINT,
     apiKey: HAP_API_KEY,
   });
@@ -102,7 +102,7 @@ async function main() {
   // 3. Initialize StopGuard
   console.log("[3] Creating StopGuard for enforcement...");
   const stopGuard = new StopGuard({
-    client: hapClient,
+    provider: hapProvider,
     questionEngine,
     middleware: [
       {
@@ -206,15 +206,15 @@ async function main() {
 
     console.log(`\n[Proceed] Clarification received. Proceeding with action...`);
 
-    // Send feedback to HAP Service
+    // Send feedback to HAP Provider
     try {
-      await hapClient.sendFeedback({
+      await hapProvider.sendFeedback({
         blueprintId: clarificationResult.blueprintId!,
         patternId: "basic-meaning-clarification",
         agencyMode: "convergent",
         stopResolved: true,
       });
-      console.log(`[Feedback] Sent to HAP Service`);
+      console.log(`[Feedback] Sent to HAP Provider`);
     } catch (error) {
       console.log(`[Feedback] Failed to send (demo mode): ${error}`);
     }

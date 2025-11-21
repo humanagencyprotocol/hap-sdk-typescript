@@ -60,7 +60,7 @@ describe("E2E Tests - Example Integrations", () => {
       };
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 
@@ -146,7 +146,7 @@ describe("E2E Tests - Example Integrations", () => {
       };
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 
@@ -205,7 +205,7 @@ describe("E2E Tests - Example Integrations", () => {
       };
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 
@@ -294,7 +294,7 @@ describe("E2E Tests - Example Integrations", () => {
       };
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 
@@ -409,7 +409,7 @@ describe("E2E Tests - Example Integrations", () => {
       });
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 
@@ -511,7 +511,7 @@ describe("E2E Tests - Example Integrations", () => {
       };
 
       const stopGuard = new StopGuard({
-        client: hapClient,
+        provider: hapClient,
         questionEngine,
       });
 

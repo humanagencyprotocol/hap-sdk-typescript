@@ -7,9 +7,10 @@
  * @packageDocumentation
  */
 
-// Re-export schemas and errors
+// Re-export schemas, errors, and provider
 export * from "./schemas";
 export * from "./errors";
+export * from "./provider";
 
 // ============================================================================
 // Ladder Stages
@@ -88,6 +89,20 @@ export interface InquiryBlueprint {
 
   /** What the AI is missing that requires human input */
   stopCondition: StopCondition;
+
+  /**
+   * LLM prompt guidance (v0.2, optional)
+   *
+   * Provides structural context to enhance LLM question generation.
+   * This is NOT a hardcoded template - it guides the LLM to generate
+   * appropriate questions based on the actual user context.
+   *
+   * Example: "The user has made an ambiguous reference. Help them
+   * specify the exact entity they mean."
+   *
+   * Questions are ALWAYS LLM-generated, never hardcoded.
+   */
+  promptContext?: string;
 }
 
 // ============================================================================
@@ -111,6 +126,48 @@ export interface InquiryRequest {
 
   /** Optional: What kind of stop was detected */
   stopCondition?: StopCondition;
+
+  /**
+   * Stop pattern identifier (v0.2, optional, structural)
+   *
+   * Examples: "ambiguous-pronoun", "unclear-scope", "missing-context",
+   *           "vague-requirement", "conflicting-goals"
+   */
+  stopPattern?: string;
+
+  /**
+   * Application domain (v0.2, optional)
+   *
+   * Helps provider select contextually relevant blueprints.
+   * Examples: "code", "design", "business", "research", "education"
+   */
+  domain?: string;
+
+  /**
+   * Complexity signal (v0.2, optional, 1-5 scale)
+   *
+   * 1 = Simple clarification needed
+   * 3 = Moderate ambiguity
+   * 5 = High complexity, multiple unknowns
+   */
+  complexitySignal?: number;
+
+  /**
+   * Session context (v0.2, optional, structural metrics)
+   *
+   * Provides structural metrics from current session to help
+   * provider adapt blueprint selection.
+   */
+  sessionContext?: {
+    /** Number of stops in this session so far */
+    previousStops: number;
+
+    /** Number of consecutive stops without resolution */
+    consecutiveStops: number;
+
+    /** Average turns to resolution in this session */
+    averageResolutionTurns: number;
+  };
 }
 
 // ============================================================================
@@ -176,6 +233,22 @@ export interface QuestionSpec {
 
   /** What the AI is missing */
   stopCondition: StopCondition;
+
+  /**
+   * LLM prompt guidance (v0.2, optional)
+   *
+   * Guides the LLM in generating contextually appropriate questions.
+   * Questions are ALWAYS dynamically generated, never hardcoded.
+   */
+  promptContext?: string;
+
+  /**
+   * Example questions (v0.2, optional)
+   *
+   * Shows desired questioning style. Used as style guidance only,
+   * not as templates to be used verbatim.
+   */
+  examples?: string[];
 }
 
 // ============================================================================

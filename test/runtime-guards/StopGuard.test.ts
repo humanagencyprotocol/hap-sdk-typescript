@@ -39,7 +39,7 @@ class ErrorQuestionEngine implements QuestionEngine {
 }
 
 describe("StopGuard", () => {
-  let client: HapClient;
+  let provider: HapClient;
   let questionEngine: QuestionEngine;
   let stopGuard: StopGuard;
 
@@ -60,12 +60,12 @@ describe("StopGuard", () => {
 
   beforeEach(() => {
     mockFetch.mockReset();
-    client = new HapClient({
+    provider = new HapClient({
       endpoint: "https://api.test.com",
       apiKey: "test-key",
     });
     questionEngine = new MockQuestionEngine();
-    stopGuard = new StopGuard({ client, questionEngine });
+    stopGuard = new StopGuard({ provider, questionEngine });
   });
 
   describe("RG-001: ensureClarified requests blueprint when stop triggered", () => {
@@ -258,7 +258,7 @@ describe("StopGuard", () => {
       };
 
       const guardWithMiddleware = new StopGuard({
-        client,
+        provider,
         questionEngine,
         middleware: [middleware],
       });
@@ -285,7 +285,7 @@ describe("StopGuard", () => {
       };
 
       const guardWithMiddleware = new StopGuard({
-        client,
+        provider,
         questionEngine,
         middleware: [middleware],
       });
@@ -314,7 +314,7 @@ describe("StopGuard", () => {
       };
 
       const guardWithMiddleware = new StopGuard({
-        client,
+        provider,
         questionEngine,
         middleware: [middleware],
       });
@@ -344,7 +344,7 @@ describe("StopGuard", () => {
       };
 
       const guardWithMiddleware = new StopGuard({
-        client,
+        provider,
         questionEngine,
         middleware: [middleware],
       });
@@ -369,7 +369,7 @@ describe("StopGuard", () => {
       };
 
       const guardWithMiddleware = new StopGuard({
-        client,
+        provider,
         questionEngine,
         middleware: [middleware],
       });
@@ -457,7 +457,7 @@ describe("StopGuard", () => {
     it("should propagate Question Engine errors", async () => {
       const errorEngine = new ErrorQuestionEngine();
       const guardWithErrorEngine = new StopGuard({
-        client,
+        provider,
         questionEngine: errorEngine,
       });
 

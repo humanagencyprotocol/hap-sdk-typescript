@@ -18,8 +18,8 @@ import type {
   InquiryBlueprint,
   QuestionEngine,
   QuestionSpec,
+  HapProvider,
 } from "../types";
-import type { HapClient } from "../hap-client/HapClient";
 import {
   QuestionSpecFactory,
   defaultQuestionSpecFactory,
@@ -63,8 +63,8 @@ export interface StopGuardMiddleware {
  * Configuration for StopGuard
  */
 export interface StopGuardConfig {
-  /** HAP Service client */
-  client: HapClient;
+  /** HAP Provider (production: HapClient, development: LocalHapProvider) */
+  provider: HapProvider;
 
   /** Local question engine (provided by integrator) */
   questionEngine: QuestionEngine;
@@ -90,13 +90,13 @@ export interface StopGuardConfig {
  * metadata from the InquiryRequest is sent to HAP Service.
  */
 export class StopGuard {
-  private readonly client: HapClient;
+  private readonly provider: HapProvider;
   private readonly questionEngine: QuestionEngine;
   private readonly questionSpecFactory: QuestionSpecFactory;
   private readonly middleware: StopGuardMiddleware[];
 
   constructor(config: StopGuardConfig) {
-    this.client = config.client;
+    this.provider = config.provider;
     this.questionEngine = config.questionEngine;
     this.questionSpecFactory =
       config.questionSpecFactory ?? defaultQuestionSpecFactory;
@@ -133,9 +133,9 @@ export class StopGuard {
     // Stop detected - invoke middleware
     this.invokeMiddleware((m) => m.onStopDetected?.(request));
 
-    // Request blueprint from HAP Service
+    // Request blueprint from HAP Provider
     // CRITICAL: Only request (structural metadata) is sent, NOT context
-    const blueprint = await this.client.requestInquiryBlueprint(request);
+    const blueprint = await this.provider.requestInquiryBlueprint(request);
 
     // Invoke middleware
     this.invokeMiddleware((m) => m.onBlueprintReceived?.(blueprint));

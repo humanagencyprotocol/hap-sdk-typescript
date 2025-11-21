@@ -2,9 +2,15 @@
 
 TypeScript/JavaScript SDK for the [Human Agency Protocol](https://humanagencyprotocol.org).
 
-**Version:** 0.1.0
+**Version:** 0.2.0 (in development)
 **Protocol Version:** 0.1
 **Status:** Development
+
+**Latest Changes (v0.2.0):**
+- Provider abstraction pattern (supports both HapClient and LocalHapProvider)
+- Extended InquiryBlueprint with optional `promptContext` for LLM guidance
+- Extended InquiryRequest with optional structural metadata
+- Breaking change: `StopGuard` config now uses `provider` instead of `client`
 
 ---
 
@@ -16,7 +22,8 @@ The Human Agency Protocol enforces mandatory human checkpoints in AI systems. AI
 
 This SDK provides:
 1. **Protocol compliance** - Integration with HAP Service Providers
-2. **Local optimization** - Tools to improve question-asking over time (privacy-preserving)
+2. **Local development** - File-based blueprint testing without a service (v0.2+)
+3. **Local optimization** - Tools to improve question-asking over time (privacy-preserving)
 
 ---
 
@@ -33,8 +40,8 @@ npm install hap-sdk
 ```typescript
 import { HapClient, StopGuard } from 'hap-sdk';
 
-// 1. Create HAP client
-const hapClient = new HapClient({
+// 1. Create HAP provider (production)
+const hapProvider = new HapClient({
   endpoint: process.env.HAP_ENDPOINT!,
   apiKey: process.env.HAP_API_KEY!,
 });
@@ -48,7 +55,10 @@ const questionEngine = {
 };
 
 // 3. Use StopGuard in your conversation flow
-const stopGuard = new StopGuard(hapClient, questionEngine);
+const stopGuard = new StopGuard({
+  provider: hapProvider,
+  questionEngine
+});
 
 async function handleUserInput(context: any) {
   const inquiryReq = detectStopCondition(context);
@@ -64,7 +74,7 @@ async function handleUserInput(context: any) {
     const updatedContext = updateContextWithAnswer(context, answer);
 
     // Send structural feedback to HAP
-    await hapClient.sendFeedback({
+    await hapProvider.sendFeedback({
       blueprintId: "phase-progress",
       stopResolved: outcome.stopResolved,
     });

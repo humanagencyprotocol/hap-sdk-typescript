@@ -77,13 +77,23 @@ export class QuestionSpecFactory {
       }
 
       // Create QuestionSpec with deep copy of targetStructures
-      return {
+      const spec: QuestionSpec = {
         ladderStage: blueprint.ladderStage,
         targetStructures: [...blueprint.targetStructures], // Deep copy
         tone: tone as "facilitative" | "probing" | "directive",
         addressing: addressing as "individual" | "group",
         stopCondition: blueprint.stopCondition,
       };
+
+      // Pass through optional v0.2 fields
+      if (blueprint.promptContext) {
+        spec.promptContext = blueprint.promptContext;
+      }
+      if (blueprint.examples) {
+        spec.examples = [...blueprint.examples]; // Deep copy
+      }
+
+      return spec;
     } catch (error) {
       // Wrap transformer errors with context
       if (error instanceof ValidationError) {

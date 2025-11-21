@@ -43,6 +43,8 @@ export const InquiryBlueprintSchema = z.object({
   renderHint: z.string().min(1).max(500),
   examples: z.array(z.string().max(200)).max(5),
   stopCondition: StopConditionSchema,
+  // v0.2: LLM prompt guidance (optional, backward compatible)
+  promptContext: z.string().min(1).max(2000).optional(),
 });
 
 // ============================================================================
@@ -54,6 +56,17 @@ export const InquiryRequestSchema = z.object({
   agencyMode: AgencyModeSchema,
   stopTrigger: z.boolean(),
   stopCondition: StopConditionSchema.optional(),
+  // v0.2: Optional structural metadata (backward compatible)
+  stopPattern: z.string().min(1).max(100).optional(),
+  domain: z.string().min(1).max(50).optional(),
+  complexitySignal: z.number().int().min(1).max(5).optional(),
+  sessionContext: z
+    .object({
+      previousStops: z.number().int().min(0).max(1000),
+      consecutiveStops: z.number().int().min(0).max(100),
+      averageResolutionTurns: z.number().min(0).max(100),
+    })
+    .optional(),
 });
 
 // ============================================================================
@@ -84,6 +97,9 @@ export const QuestionSpecSchema = z.object({
   tone: z.enum(["facilitative", "probing", "directive"]),
   addressing: z.enum(["individual", "group"]),
   stopCondition: StopConditionSchema,
+  // v0.2: LLM prompt guidance (optional, backward compatible)
+  promptContext: z.string().min(1).max(2000).optional(),
+  examples: z.array(z.string().max(200)).max(5).optional(),
 });
 
 // ============================================================================
