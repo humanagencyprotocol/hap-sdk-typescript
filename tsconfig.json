@@ -5,6 +5,11 @@
     "lib": ["ES2022"],
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "baseUrl": ".",
+    "paths": {
+      "hap-sdk": ["src"],
+      "hap-sdk/*": ["src/*"]
+    },
 
     // Emit
     "declaration": true,

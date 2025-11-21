@@ -10,11 +10,9 @@ import {
   HapClient,
   StopGuard,
   StopDetector,
-  GuardedAction,
   QuestionOutcomeLogger,
-  QuestionSpecFactory,
-} from "../src/index";
-import type { QuestionEngine, QuestionSpec } from "../src/types";
+} from "hap-sdk";
+import type { QuestionEngine, QuestionSpec } from "hap-sdk";
 import * as readline from "readline";
 
 // ============================================================================
@@ -74,7 +72,7 @@ async function askUser(question: string): Promise<string> {
   });
 
   return new Promise((resolve) => {
-    rl.question(`\n${question}\n> `, (answer) => {
+    rl.question(`\n${question}\n> `, (answer: string) => {
       rl.close();
       resolve(answer);
     });
@@ -195,13 +193,6 @@ async function main() {
     const answer = await askUser(clarificationResult.question!);
 
     console.log(`\n[Answer] "${answer}"`);
-
-    // Update context with clarification
-    const updatedContext = {
-      ...context,
-      clarification: answer,
-      clarified: true,
-    };
 
     // Log outcome
     metrics.log({

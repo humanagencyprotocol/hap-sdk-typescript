@@ -192,7 +192,7 @@ All examples include:
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
+Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) and review our [Code of Conduct](./CODE_OF_CONDUCT.md) before participating. Security disclosures should follow [SECURITY.md](./SECURITY.md).
 
 **Development process:**
 1. Follow design specs in main protocol repo
@@ -205,6 +205,8 @@ Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md).
 ## License
 
 Apache-2.0 - see [LICENSE](./LICENSE)
+
+Third-party components are documented in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md).
 
 ---
 

@@ -101,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ESM, CJS, and TypeScript declaration files
 - Published to npm as `hap-sdk`
 - Compatible with Node.js 18+
-- Zero dependencies (only dev dependencies)
+- Single runtime dependency (`zod`) with permissive MIT license
 
 ### Security
 
