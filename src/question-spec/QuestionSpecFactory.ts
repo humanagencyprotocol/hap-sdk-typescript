@@ -59,8 +59,7 @@ export class QuestionSpecFactory {
       // Validate tone is one of the allowed values
       if (!this.isValidTone(tone)) {
         throw new ValidationError(
-          `Invalid tone value: "${tone}". Must be one of: facilitative, probing, directive`,
-          { blueprintId: blueprint.id }
+          `Invalid tone value: "${tone}". Must be one of: facilitative, probing, directive`
         );
       }
 
@@ -73,8 +72,7 @@ export class QuestionSpecFactory {
       // Validate addressing is one of the allowed values
       if (!this.isValidAddressing(addressing)) {
         throw new ValidationError(
-          `Invalid addressing value: "${addressing}". Must be one of: individual, group`,
-          { blueprintId: blueprint.id }
+          `Invalid addressing value: "${addressing}". Must be one of: individual, group`
         );
       }
 
@@ -94,10 +92,7 @@ export class QuestionSpecFactory {
 
       throw new ValidationError(
         `Failed to convert blueprint "${blueprint.id}" to QuestionSpec: ${(error as Error).message}`,
-        {
-          blueprintId: blueprint.id,
-          cause: error,
-        }
+        { cause: error }
       );
     }
   }

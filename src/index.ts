@@ -1,18 +1,62 @@
 /**
  * HAP SDK - TypeScript SDK for the Human Agency Protocol
  *
+ * Enforces Stop→Ask→Proceed to keep AI aligned with human meaning.
+ *
  * @packageDocumentation
  */
 
-// Types
+// ============================================================================
+// Types & Schemas
+// ============================================================================
+
+// Core structural types
 export * from './types';
 
-// Core modules
-export { HapClient } from './hap-client/HapClient';
-export { StopGuard } from './runtime-guards/StopGuard';
-export { QuestionSpecFactory } from './question-spec/QuestionSpecFactory';
-export { QuestionOutcomeLogger } from './metrics/QuestionOutcomeLogger';
+// ============================================================================
+// Client & Communication
+// ============================================================================
 
-// Version
+export { HapClient } from './hap-client/HapClient';
+export type { HapClientConfig } from './hap-client/HapClient';
+
+// ============================================================================
+// Runtime Enforcement
+// ============================================================================
+
+export { StopGuard } from './runtime-guards/StopGuard';
+export type {
+  ClarificationResult,
+  StopGuardMiddleware,
+  StopGuardConfig,
+} from './runtime-guards/StopGuard';
+
+// ============================================================================
+// Question Spec Conversion
+// ============================================================================
+
+export {
+  QuestionSpecFactory,
+  defaultQuestionSpecFactory,
+} from './question-spec/QuestionSpecFactory';
+export type {
+  FieldTransformer,
+  QuestionSpecFactoryConfig,
+} from './question-spec/QuestionSpecFactory';
+
+// ============================================================================
+// Metrics & Logging
+// ============================================================================
+
+export { QuestionOutcomeLogger } from './metrics/QuestionOutcomeLogger';
+export type {
+  QuestionStats,
+  OutcomeExporter,
+} from './metrics/QuestionOutcomeLogger';
+
+// ============================================================================
+// Version Information
+// ============================================================================
+
 export const VERSION = '0.1.0';
 export const PROTOCOL_VERSION = '0.1';
