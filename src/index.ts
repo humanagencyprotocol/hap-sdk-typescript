@@ -31,6 +31,27 @@ export type {
   StopGuardConfig,
 } from './runtime-guards/StopGuard';
 
+export {
+  StopDetector,
+  createManualDetector,
+  createDetectorWithStrategy,
+} from './runtime-guards/StopDetector';
+export type {
+  StopAnalysis,
+  StopDetectionStrategy,
+  StopDetectorConfig,
+} from './runtime-guards/StopDetector';
+
+export {
+  GuardedAction,
+  isStopped,
+  isResolved,
+} from './runtime-guards/GuardedAction';
+export type {
+  StoppedAction,
+  ResolvedAction,
+} from './runtime-guards/GuardedAction';
+
 // ============================================================================
 // Question Spec Conversion
 // ============================================================================
