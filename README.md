@@ -153,10 +153,31 @@ npm run lint
 
 ## Examples
 
+### Quick Start Examples
+
+**Basic Node.js:**
+```bash
+npx tsx examples/basic-nodejs.ts
+```
+
+**Next.js API Route:**
+```typescript
+// pages/api/assistant.ts
+import { HapClient, StopGuard } from 'hap-sdk';
+// See examples/nextjs-api-route.ts for complete implementation
+```
+
 See the [examples/](./examples) directory for:
-- Basic Node.js integration
-- Next.js API route example
+- **basic-nodejs.ts** - Interactive CLI demonstrating full Stop→Ask→Proceed flow
+- **nextjs-api-route.ts** - Production-ready API endpoint with session handling
+- **README.md** - Detailed setup instructions and troubleshooting
+
+All examples include:
+- Stop condition detection
+- Question generation with local engine
+- Metrics tracking
 - Error handling patterns
+- Privacy guarantees
 
 ---
 
