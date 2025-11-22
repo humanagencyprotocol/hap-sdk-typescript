@@ -214,6 +214,14 @@ app / platform
 
 ## Documentation
 
+### SDK Documentation
+
+- **[API Reference](./docs/API.md)** - Complete API documentation for all components
+- **[Local Development Guide](./docs/LOCAL_DEVELOPMENT.md)** - Using LocalHapProvider and blueprints
+- **[Migration Guide](./docs/MIGRATION.md)** - Upgrading from v0.1.x to v0.2.x
+
+### Protocol Specification
+
 - **[Design Specification](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_design_v0_1.md)** - Architecture and interfaces
 - **[Development Plan](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_dev_plan_v0_1.md)** - Implementation roadmap
 - **[Testing Plan](https://github.com/humanagencyprotocol/protocol/blob/main/doc/hap_sdk_testing_plan_v0_1.md)** - Acceptance criteria
