@@ -11,6 +11,11 @@ import {
   StopGuard,
   StopDetector,
   QuestionOutcomeLogger,
+  StopPatterns,
+  Domains,
+  detectAmbiguityPattern,
+  classifyDomain,
+  estimateComplexity,
 } from "hap-sdk";
 import type { QuestionEngine, QuestionSpec } from "hap-sdk";
 import * as readline from "readline";
@@ -142,21 +147,25 @@ async function main() {
     "\nWhat would you like me to help you with?"
   );
 
-  // Analyze input for ambiguity (simple heuristic)
-  const ambiguityKeywords = [
-    "maybe",
-    "unclear",
-    "not sure",
-    "kinda",
-    "sorta",
-    "possibly",
-  ];
-  const isAmbiguous = ambiguityKeywords.some((keyword) =>
-    userInput.toLowerCase().includes(keyword)
-  );
+  // Analyze input using metadata helpers
+  const detectedPattern = detectAmbiguityPattern(userInput);
+  const isAmbiguous = detectedPattern !== null;
+
+  // Extract keywords for domain classification
+  const words = userInput.toLowerCase().split(/\s+/);
+  const domain = classifyDomain(words);
+
+  // Estimate complexity
+  const complexity = estimateComplexity({
+    numEntities: words.length,
+    hasAmbiguity: isAmbiguous,
+    textLength: userInput.length,
+  });
 
   console.log(`\n[Analyzing] Input: "${userInput}"`);
-  console.log(`[Analyzing] Ambiguous: ${isAmbiguous}`);
+  console.log(`[Analyzing] Pattern detected: ${detectedPattern || "none"}`);
+  console.log(`[Analyzing] Domain: ${domain}`);
+  console.log(`[Analyzing] Complexity: ${complexity}/5`);
 
   // Create context (semantic data - stays local)
   const context = {
@@ -165,14 +174,22 @@ async function main() {
     timestamp: Date.now(),
   };
 
-  // Create inquiry request (structural only)
-  const inquiryRequest = detector.createRequest({
+  // Create inquiry request with metadata (structural only)
+  const inquiryRequest = detector.createRequestWithMetadata({
     ladderStage: "meaning",
     agencyMode: "convergent",
-    stopTrigger: isAmbiguous, // Only trigger stop if ambiguous
+    stopTrigger: isAmbiguous,
+    stopPattern: detectedPattern || undefined,
+    domain,
+    complexitySignal: complexity,
   });
 
   console.log(`\n[Request] Stop trigger: ${inquiryRequest.stopTrigger}`);
+  if (inquiryRequest.stopPattern) {
+    console.log(`[Request] Stop pattern: ${inquiryRequest.stopPattern}`);
+  }
+  console.log(`[Request] Domain: ${inquiryRequest.domain}`);
+  console.log(`[Request] Complexity: ${inquiryRequest.complexitySignal}`);
 
   // ========================================================================
   // Stop→Ask→Proceed Enforcement

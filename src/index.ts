@@ -14,11 +14,24 @@
 export * from './types';
 
 // ============================================================================
-// Client & Communication
+// Providers
 // ============================================================================
 
 export { HapClient } from './hap-client/HapClient';
 export type { HapClientConfig } from './hap-client/HapClient';
+
+export { LocalHapProvider } from './providers/LocalHapProvider';
+export type { LocalHapProviderConfig } from './providers/LocalHapProvider';
+
+export {
+  simpleLatestVersionSelector,
+  bestPerformanceSelector,
+  balancedSelector,
+  contextAwareSelector,
+  randomSelector,
+  createEpsilonGreedySelector,
+  createLRUSelector,
+} from './providers/exampleSelectors';
 
 // ============================================================================
 // Runtime Enforcement
@@ -41,6 +54,16 @@ export type {
   StopDetectionStrategy,
   StopDetectorConfig,
 } from './runtime-guards/StopDetector';
+
+export {
+  StopPatterns,
+  Domains,
+  ComplexityLevels,
+  detectAmbiguityPattern,
+  classifyDomain,
+  estimateComplexity,
+  createSessionContext,
+} from './runtime-guards/metadata-helpers';
 
 export {
   GuardedAction,
@@ -79,5 +102,5 @@ export type {
 // Version Information
 // ============================================================================
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.2.0';
 export const PROTOCOL_VERSION = '0.1';

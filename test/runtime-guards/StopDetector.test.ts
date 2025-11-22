@@ -415,4 +415,338 @@ describe("StopDetector", () => {
       );
     });
   });
+
+  describe("Metadata support (M7)", () => {
+    describe("createRequestWithMetadata", () => {
+      it("should create request with all metadata fields", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          stopPattern: "ambiguous-pronoun",
+          domain: "software-development",
+          complexitySignal: 3,
+          sessionContext: {
+            previousStops: 2,
+            consecutiveStops: 1,
+            averageResolutionTurns: 2.5,
+          },
+        });
+
+        expect(request).toEqual({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          stopPattern: "ambiguous-pronoun",
+          domain: "software-development",
+          complexitySignal: 3,
+          sessionContext: {
+            previousStops: 2,
+            consecutiveStops: 1,
+            averageResolutionTurns: 2.5,
+          },
+        });
+      });
+
+      it("should create request with only required fields", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "purpose",
+          agencyMode: "reflective",
+          stopTrigger: false,
+        });
+
+        expect(request).toEqual({
+          ladderStage: "purpose",
+          agencyMode: "reflective",
+          stopTrigger: false,
+        });
+      });
+
+      it("should create request with partial metadata", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "intention",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          stopPattern: "multiple-paths",
+          complexitySignal: 4,
+        });
+
+        expect(request).toEqual({
+          ladderStage: "intention",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          stopPattern: "multiple-paths",
+          complexitySignal: 4,
+        });
+      });
+    });
+
+    describe("stopPattern validation", () => {
+      it("should accept valid kebab-case patterns", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          stopPattern: "ambiguous-pronoun",
+        });
+
+        expect(request.stopPattern).toBe("ambiguous-pronoun");
+      });
+
+      it("should reject patterns with uppercase", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            stopPattern: "Ambiguous-Pronoun",
+          });
+        }).toThrow(/stopPattern must be kebab-case/);
+      });
+
+      it("should reject patterns with spaces", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            stopPattern: "ambiguous pronoun",
+          });
+        }).toThrow(/stopPattern must be kebab-case/);
+      });
+
+      it("should reject empty patterns", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            stopPattern: "",
+          });
+        }).toThrow(/stopPattern cannot be empty/);
+      });
+
+      it("should reject non-string patterns", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            stopPattern: 123 as any,
+          });
+        }).toThrow(/stopPattern must be a string/);
+      });
+    });
+
+    describe("domain validation", () => {
+      it("should accept valid kebab-case domains", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          domain: "software-development",
+        });
+
+        expect(request.domain).toBe("software-development");
+      });
+
+      it("should reject domains with uppercase", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            domain: "Software-Development",
+          });
+        }).toThrow(/domain must be kebab-case/);
+      });
+
+      it("should reject empty domains", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            domain: "",
+          });
+        }).toThrow(/domain cannot be empty/);
+      });
+
+      it("should reject non-string domains", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            domain: 123 as any,
+          });
+        }).toThrow(/domain must be a string/);
+      });
+    });
+
+    describe("complexitySignal validation", () => {
+      it("should accept complexity values 1-5", () => {
+        for (let i = 1; i <= 5; i++) {
+          const request = detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            complexitySignal: i,
+          });
+          expect(request.complexitySignal).toBe(i);
+        }
+      });
+
+      it("should reject complexity below 1", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            complexitySignal: 0,
+          });
+        }).toThrow(/complexitySignal must be between 1 and 5/);
+      });
+
+      it("should reject complexity above 5", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            complexitySignal: 6,
+          });
+        }).toThrow(/complexitySignal must be between 1 and 5/);
+      });
+
+      it("should reject non-integer complexity", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            complexitySignal: 3.5,
+          });
+        }).toThrow(/complexitySignal must be an integer/);
+      });
+
+      it("should reject non-number complexity", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            complexitySignal: "3" as any,
+          });
+        }).toThrow(/complexitySignal must be a number/);
+      });
+    });
+
+    describe("sessionContext validation", () => {
+      it("should accept valid session context", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          sessionContext: {
+            previousStops: 5,
+            consecutiveStops: 2,
+            averageResolutionTurns: 3.5,
+          },
+        });
+
+        expect(request.sessionContext).toEqual({
+          previousStops: 5,
+          consecutiveStops: 2,
+          averageResolutionTurns: 3.5,
+        });
+      });
+
+      it("should reject negative previousStops", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            sessionContext: {
+              previousStops: -1,
+              consecutiveStops: 0,
+              averageResolutionTurns: 2.0,
+            },
+          });
+        }).toThrow(/previousStops must be a non-negative integer/);
+      });
+
+      it("should reject non-integer previousStops", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            sessionContext: {
+              previousStops: 2.5,
+              consecutiveStops: 0,
+              averageResolutionTurns: 2.0,
+            },
+          });
+        }).toThrow(/previousStops must be a non-negative integer/);
+      });
+
+      it("should reject negative consecutiveStops", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            sessionContext: {
+              previousStops: 2,
+              consecutiveStops: -1,
+              averageResolutionTurns: 2.0,
+            },
+          });
+        }).toThrow(/consecutiveStops must be a non-negative integer/);
+      });
+
+      it("should reject negative averageResolutionTurns", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            sessionContext: {
+              previousStops: 2,
+              consecutiveStops: 0,
+              averageResolutionTurns: -1.5,
+            },
+          });
+        }).toThrow(/averageResolutionTurns must be non-negative/);
+      });
+
+      it("should allow floating point averageResolutionTurns", () => {
+        const request = detector.createRequestWithMetadata({
+          ladderStage: "meaning",
+          agencyMode: "convergent",
+          stopTrigger: true,
+          sessionContext: {
+            previousStops: 3,
+            consecutiveStops: 1,
+            averageResolutionTurns: 2.5,
+          },
+        });
+
+        expect(request.sessionContext?.averageResolutionTurns).toBe(2.5);
+      });
+
+      it("should reject non-object sessionContext", () => {
+        expect(() => {
+          detector.createRequestWithMetadata({
+            ladderStage: "meaning",
+            agencyMode: "convergent",
+            stopTrigger: true,
+            sessionContext: "invalid" as any,
+          });
+        }).toThrow(/sessionContext must be an object/);
+      });
+    });
+  });
 });

@@ -1,0 +1,20 @@
+{
+  "id": "purpose-convergent-direction-v1",
+  "intent": "clarify purpose and direction",
+  "ladderStage": "purpose",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "intended_outcome",
+    "success_criteria"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask about intended outcome",
+  "examples": [
+    "What outcome are you hoping for?",
+    "What would success look like?"
+  ],
+  "stopCondition": "direction"
+}

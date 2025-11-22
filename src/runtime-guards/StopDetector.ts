@@ -128,6 +128,113 @@ export class StopDetector {
   }
 
   /**
+   * Create InquiryRequest with optional metadata (v0.2+)
+   *
+   * Allows apps to provide structural metadata that helps LocalHapProvider
+   * select better blueprints. Metadata is privacy-safe - no semantic content.
+   *
+   * @param params - Request parameters with optional metadata
+   * @returns InquiryRequest with validated metadata
+   * @throws ValidationError if parameters are invalid
+   *
+   * @example
+   * ```typescript
+   * const detector = new StopDetector();
+   *
+   * // With stop pattern
+   * const request = detector.createRequestWithMetadata({
+   *   ladderStage: "meaning",
+   *   agencyMode: "convergent",
+   *   stopTrigger: true,
+   *   stopPattern: "ambiguous-pronoun"
+   * });
+   *
+   * // With complexity and domain
+   * const request = detector.createRequestWithMetadata({
+   *   ladderStage: "purpose",
+   *   agencyMode: "convergent",
+   *   stopTrigger: true,
+   *   complexitySignal: 4,  // High complexity (scale 1-5)
+   *   domain: "software-development"
+   * });
+   *
+   * // With session context
+   * const request = detector.createRequestWithMetadata({
+   *   ladderStage: "meaning",
+   *   agencyMode: "convergent",
+   *   stopTrigger: true,
+   *   sessionContext: {
+   *     previousStops: 3,
+   *     consecutiveStops: 2,
+   *     averageResolutionTurns: 2.5
+   *   }
+   * });
+   * ```
+   */
+  createRequestWithMetadata(params: {
+    ladderStage: LadderStage;
+    agencyMode: AgencyMode;
+    stopTrigger: boolean;
+    stopPattern?: string;
+    domain?: string;
+    complexitySignal?: number;
+    sessionContext?: {
+      previousStops: number;
+      consecutiveStops: number;
+      averageResolutionTurns: number;
+    };
+  }): InquiryRequest {
+    // Validate required fields
+    this.validateRequest({
+      ladderStage: params.ladderStage,
+      agencyMode: params.agencyMode,
+      stopTrigger: params.stopTrigger,
+    });
+
+    // Validate optional metadata
+    if (params.stopPattern !== undefined) {
+      this.validateStopPattern(params.stopPattern);
+    }
+
+    if (params.domain !== undefined) {
+      this.validateDomain(params.domain);
+    }
+
+    if (params.complexitySignal !== undefined) {
+      this.validateComplexitySignal(params.complexitySignal);
+    }
+
+    if (params.sessionContext !== undefined) {
+      this.validateSessionContext(params.sessionContext);
+    }
+
+    // Build request with metadata
+    const request: InquiryRequest = {
+      ladderStage: params.ladderStage,
+      agencyMode: params.agencyMode,
+      stopTrigger: params.stopTrigger,
+    };
+
+    if (params.stopPattern) {
+      request.stopPattern = params.stopPattern;
+    }
+
+    if (params.domain) {
+      request.domain = params.domain;
+    }
+
+    if (params.complexitySignal !== undefined) {
+      request.complexitySignal = params.complexitySignal;
+    }
+
+    if (params.sessionContext) {
+      request.sessionContext = params.sessionContext;
+    }
+
+    return request;
+  }
+
+  /**
    * Validate analysis result
    */
   private validateAnalysis(analysis: StopAnalysis): void {
@@ -198,6 +305,115 @@ export class StopDetector {
     if (!validModes.includes(mode)) {
       throw new ValidationError(
         `Invalid agencyMode: "${mode}". Must be one of: ${validModes.join(", ")}`
+      );
+    }
+  }
+
+  /**
+   * Validate stop pattern (optional metadata)
+   */
+  private validateStopPattern(pattern: string): void {
+    if (typeof pattern !== "string") {
+      throw new ValidationError("stopPattern must be a string");
+    }
+
+    if (pattern.trim().length === 0) {
+      throw new ValidationError("stopPattern cannot be empty");
+    }
+
+    // Pattern should be kebab-case (no spaces, lowercase with hyphens)
+    if (!/^[a-z0-9-]+$/.test(pattern)) {
+      throw new ValidationError(
+        `stopPattern must be kebab-case (lowercase, hyphens only): "${pattern}"`
+      );
+    }
+  }
+
+  /**
+   * Validate domain (optional metadata)
+   */
+  private validateDomain(domain: string): void {
+    if (typeof domain !== "string") {
+      throw new ValidationError("domain must be a string");
+    }
+
+    if (domain.trim().length === 0) {
+      throw new ValidationError("domain cannot be empty");
+    }
+
+    // Domain should be kebab-case
+    if (!/^[a-z0-9-]+$/.test(domain)) {
+      throw new ValidationError(
+        `domain must be kebab-case (lowercase, hyphens only): "${domain}"`
+      );
+    }
+  }
+
+  /**
+   * Validate complexity signal (optional metadata)
+   */
+  private validateComplexitySignal(signal: number): void {
+    if (typeof signal !== "number") {
+      throw new ValidationError("complexitySignal must be a number");
+    }
+
+    if (!Number.isInteger(signal)) {
+      throw new ValidationError("complexitySignal must be an integer");
+    }
+
+    if (signal < 1 || signal > 5) {
+      throw new ValidationError(
+        `complexitySignal must be between 1 and 5, got: ${signal}`
+      );
+    }
+  }
+
+  /**
+   * Validate session context (optional metadata)
+   */
+  private validateSessionContext(context: {
+    previousStops: number;
+    consecutiveStops: number;
+    averageResolutionTurns: number;
+  }): void {
+    if (typeof context !== "object" || context === null) {
+      throw new ValidationError("sessionContext must be an object");
+    }
+
+    // Validate previousStops
+    if (typeof context.previousStops !== "number") {
+      throw new ValidationError("sessionContext.previousStops must be a number");
+    }
+    if (!Number.isInteger(context.previousStops) || context.previousStops < 0) {
+      throw new ValidationError(
+        "sessionContext.previousStops must be a non-negative integer"
+      );
+    }
+
+    // Validate consecutiveStops
+    if (typeof context.consecutiveStops !== "number") {
+      throw new ValidationError(
+        "sessionContext.consecutiveStops must be a number"
+      );
+    }
+    if (
+      !Number.isInteger(context.consecutiveStops) ||
+      context.consecutiveStops < 0
+    ) {
+      throw new ValidationError(
+        "sessionContext.consecutiveStops must be a non-negative integer"
+      );
+    }
+
+    // Validate averageResolutionTurns
+    if (typeof context.averageResolutionTurns !== "number") {
+      throw new ValidationError(
+        "sessionContext.averageResolutionTurns must be a number"
+      );
+    }
+    if (context.averageResolutionTurns < 0) {
+      throw new ValidationError(
+        "sessionContext.averageResolutionTurns must be non-negative"
       );
     }
   }

@@ -1,5 +1,9 @@
 # HAP SDK (TypeScript)
 
+The HAP SDK enforces mandatory human checkpoints in AI applications through a Stop→Ask→Proceed protocol. When AI encounters ambiguity or unclear goals, it must stop and request clarification—no proceeding until explicit human direction is received. All semantic content (context, questions, answers) stays strictly local; only structural signals (patterns, stages, domains) are shared with optional HAP services. Use it in production with centralized services or locally with file-based blueprints for privacy-preserving AI governance.
+
+---
+
 TypeScript/JavaScript SDK for the [Human Agency Protocol](https://humanagencyprotocol.org).
 
 **Version:** 0.2.0 (in development)
@@ -7,9 +11,10 @@ TypeScript/JavaScript SDK for the [Human Agency Protocol](https://humanagencypro
 **Status:** Development
 
 **Latest Changes (v0.2.0):**
-- Provider abstraction pattern (supports both HapClient and LocalHapProvider)
-- Extended InquiryBlueprint with optional `promptContext` for LLM guidance
-- Extended InquiryRequest with optional structural metadata
+- **LocalHapProvider** - File-based local development without HAP service
+- **Metadata helpers** - Auto-detect patterns, classify domains, estimate complexity
+- **Enhanced blueprints** - Support for LLM prompt context and structural metadata
+- **Provider abstraction** - Unified interface for HapClient and LocalHapProvider
 - Breaking change: `StopGuard` config now uses `provider` instead of `client`
 
 ---
@@ -37,10 +42,12 @@ npm install hap-sdk
 
 ## Quick Start
 
-```typescript
-import { HapClient, StopGuard } from 'hap-sdk';
+### Option 1: Production (with HAP Service)
 
-// 1. Create HAP provider (production)
+```typescript
+import { HapClient, StopGuard, StopDetector } from 'hap-sdk';
+
+// 1. Create HAP provider
 const hapProvider = new HapClient({
   endpoint: process.env.HAP_ENDPOINT!,
   apiKey: process.env.HAP_API_KEY!,
@@ -49,60 +56,159 @@ const hapProvider = new HapClient({
 // 2. Implement local QuestionEngine
 const questionEngine = {
   async generateQuestion(context: any, spec: QuestionSpec): Promise<string> {
-    // Your local LLM or rule system
     return myLocalLLM.generateQuestion(context, spec);
   },
 };
 
 // 3. Use StopGuard in your conversation flow
-const stopGuard = new StopGuard({
-  provider: hapProvider,
-  questionEngine
-});
+const stopGuard = new StopGuard({ provider: hapProvider, questionEngine });
+const detector = new StopDetector();
 
 async function handleUserInput(context: any) {
-  const inquiryReq = detectStopCondition(context);
+  const inquiryReq = detector.createRequest({
+    ladderStage: "meaning",
+    agencyMode: "convergent",
+    stopTrigger: detectAmbiguity(context)
+  });
 
-  const { clarified, question } = await stopGuard.ensureClarified(
-    context,
-    inquiryReq
-  );
+  const { clarified, question } = await stopGuard.ensureClarified(context, inquiryReq);
 
   if (!clarified && question) {
-    // Show question to user, wait for answer
     const answer = await askUser(question);
-    const updatedContext = updateContextWithAnswer(context, answer);
-
-    // Send structural feedback to HAP
     await hapProvider.sendFeedback({
-      blueprintId: "phase-progress",
-      stopResolved: outcome.stopResolved,
+      blueprintId: clarificationResult.blueprintId!,
+      stopResolved: true,
     });
   }
 }
+```
+
+### Option 2: Local Development (no HAP Service needed)
+
+```typescript
+import {
+  LocalHapProvider,
+  StopGuard,
+  StopDetector,
+  detectAmbiguityPattern,
+  classifyDomain,
+  estimateComplexity
+} from 'hap-sdk';
+
+// 1. Create local provider with file-based blueprints
+const hapProvider = new LocalHapProvider({
+  blueprintsPath: './blueprints',  // Directory with JSON blueprints
+  selector: balancedSelector,       // Selection strategy
+});
+
+// 2. Use metadata helpers for smart detection
+const detector = new StopDetector();
+const userInput = "Can you update it?";
+
+const pattern = detectAmbiguityPattern(userInput);    // "ambiguous-pronoun"
+const domain = classifyDomain(["code", "function"]);  // "software-development"
+const complexity = estimateComplexity({ hasAmbiguity: true }); // 2
+
+const inquiryReq = detector.createRequestWithMetadata({
+  ladderStage: "meaning",
+  agencyMode: "convergent",
+  stopTrigger: pattern !== null,
+  stopPattern: pattern || undefined,
+  domain,
+  complexitySignal: complexity,
+});
+
+// 3. Same StopGuard flow works with both providers
+const stopGuard = new StopGuard({ provider: hapProvider, questionEngine });
 ```
 
 **Key principle:** HAP never sees your context, questions, or answers. Only structural signals.
 
 ---
 
-## Architecture
+## Core Features
+
+### 1. Dual Provider Support
+
+```typescript
+// Production: Use HAP service for blueprint evolution
+const hapProvider = new HapClient({ endpoint, apiKey });
+
+// Local: Use file-based blueprints for development
+const hapProvider = new LocalHapProvider({
+  blueprintsPath: './blueprints',
+  selector: balancedSelector
+});
+```
+
+Both providers implement the same `HapProvider` interface, so your code works unchanged.
+
+### 2. Metadata Helpers (v0.2+)
+
+Automatically detect patterns, classify domains, and estimate complexity:
+
+```typescript
+import {
+  StopPatterns,           // Common pattern constants
+  Domains,                // Domain classifications
+  ComplexityLevels,       // Complexity scale (1-5)
+  detectAmbiguityPattern, // Auto-detect from text
+  classifyDomain,         // Classify from keywords
+  estimateComplexity,     // Calculate from signals
+  createSessionContext    // Build session metadata
+} from 'hap-sdk';
+
+// Example: Auto-detect ambiguity
+const pattern = detectAmbiguityPattern("Can you update it?");
+// Returns: "ambiguous-pronoun"
+
+// Example: Classify domain
+const domain = classifyDomain(["code", "test", "api"]);
+// Returns: "software-development"
+
+// Example: Estimate complexity
+const complexity = estimateComplexity({
+  numEntities: 5,
+  hasAmbiguity: true,
+  priorStops: 2
+});
+// Returns: 3 (on scale of 1-5)
+```
+
+### 3. Blueprint Selection Strategies
+
+LocalHapProvider supports multiple selection strategies:
+
+```typescript
+import {
+  simpleLatestVersionSelector,   // Always pick newest
+  bestPerformanceSelector,        // Pick highest success rate
+  balancedSelector,               // Balance performance & exploration
+  contextAwareSelector,           // Use metadata for smarter selection
+  createEpsilonGreedySelector,    // Configurable exploration
+  createLRUSelector               // Least-recently-used
+} from 'hap-sdk';
+```
+
+### 4. Privacy-Preserving Architecture
 
 ```
 app / platform
    │
    ├── hap-sdk
-   │     ├── hap-client         (protocol integration)
-   │     ├── types              (structural types)
-   │     ├── question-spec      (blueprint mapping)
+   │     ├── providers          (HapClient, LocalHapProvider)
+   │     ├── types              (structural types only)
+   │     ├── question-spec      (blueprint → spec conversion)
    │     ├── runtime-guards     (stop/ask/proceed enforcement)
    │     └── metrics            (local optimization)
    │
    └── local-ai
-         ├── gap-detector
-         ├── question-engine    (your LLM/rules)
-         └── optimization       (your strategy)
+         ├── gap-detector       (semantic analysis - local only)
+         ├── question-engine    (your LLM/rules - local only)
+         └── context            (your data - never leaves system)
 ```
+
+**Zero semantic leakage:** Only structural signals (ladder stage, agency mode, patterns, domains) are shared with providers.
 
 ---
 
@@ -115,14 +221,18 @@ app / platform
 
 ---
 
-## Features
+## Feature Checklist
 
+- ✅ **Dual providers** - Production (HapClient) + Local (LocalHapProvider)
+- ✅ **Metadata helpers** - Auto-detect patterns, domains, complexity
+- ✅ **Selection strategies** - 6 built-in strategies for blueprint selection
 - ✅ **Type-safe** - Full TypeScript support with strict types
-- ✅ **Privacy-first** - No semantic content leaves your system
+- ✅ **Privacy-first** - Zero semantic leakage (only structural signals)
 - ✅ **Protocol enforcement** - Stop→Ask→Proceed guaranteed
-- ✅ **Retry & circuit breaker** - Resilient network handling
-- ✅ **Local optimization** - Improve question quality over time
+- ✅ **Resilient** - Retry logic, circuit breaker, timeout handling
+- ✅ **Local metrics** - Track performance, optimize over time
 - ✅ **Framework agnostic** - Works with any JS/TS environment
+- ✅ **278 tests** - Comprehensive test coverage (≥85%)
 
 ---
 
@@ -165,10 +275,17 @@ npm run lint
 
 ### Quick Start Examples
 
-**Basic Node.js:**
+**Basic Node.js (with metadata helpers):**
 ```bash
 npx tsx examples/basic-nodejs.ts
 ```
+
+This example demonstrates:
+- Auto-detection of ambiguity patterns
+- Domain classification from keywords
+- Complexity estimation
+- Metadata-enhanced InquiryRequests
+- Full Stop→Ask→Proceed flow
 
 **Next.js API Route:**
 ```typescript
@@ -178,25 +295,25 @@ import { HapClient, StopGuard } from 'hap-sdk';
 ```
 
 See the [examples/](./examples) directory for:
-- **basic-nodejs.ts** - Interactive CLI demonstrating full Stop→Ask→Proceed flow
-- **nextjs-api-route.ts** - Production-ready API endpoint with session handling
-- **README.md** - Detailed setup instructions and troubleshooting
+- **basic-nodejs.ts** - Interactive CLI with metadata helpers
+- **nextjs-api-route.ts** - Production-ready API endpoint
+- **README.md** - Detailed setup instructions
 
 All examples include:
-- Stop condition detection
+- Pattern detection and metadata usage
 - Question generation with local engine
-- Metrics tracking
+- Metrics tracking and optimization
 - Error handling patterns
-- Privacy guarantees
+- Privacy guarantees (zero semantic leakage)
 
 ---
 
 ## Version Mapping
 
-| SDK Version | Protocol Version | Status |
-|-------------|------------------|--------|
-| 0.1.x       | 0.1              | Development |
-| 0.2.x       | 0.1              | Planned (enforcement hardening) |
+| SDK Version | Protocol Version | Status | Key Features |
+|-------------|------------------|--------|--------------|
+| 0.1.x       | 0.1              | Stable | Core protocol, HapClient, StopGuard |
+| 0.2.x       | 0.1              | Development | + LocalHapProvider, metadata helpers, selection strategies |
 
 ---
 

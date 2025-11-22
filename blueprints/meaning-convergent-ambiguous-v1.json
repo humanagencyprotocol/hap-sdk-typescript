@@ -1,0 +1,32 @@
+{
+  "id": "meaning-convergent-ambiguous-v1",
+  "intent": "clarify ambiguous language in user goal",
+  "ladderStage": "meaning",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "object_of_discussion",
+    "pronoun_referent",
+    "vague_quantifier"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask for specific clarification on ambiguous term",
+  "examples": [
+    "What do you mean by 'it'?",
+    "Which one are you referring to?",
+    "What specifically do you mean by 'better'?"
+  ],
+  "stopCondition": "meaning",
+  "promptContext": {
+    "role": "You are helping clarify ambiguous language in the user's goal.",
+    "task": "Generate a question that asks the user to clarify specific ambiguous terms, pronouns, or vague language.",
+    "constraints": [
+      "Keep the question short and focused on one ambiguity",
+      "Use a facilitative, non-judgmental tone",
+      "Reference the specific ambiguous term from the user's input"
+    ],
+    "format": "A single, direct question that addresses the ambiguity"
+  }
+}

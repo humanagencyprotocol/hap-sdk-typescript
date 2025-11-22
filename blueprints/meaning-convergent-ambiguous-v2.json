@@ -1,0 +1,16 @@
+{
+  "id": "meaning-convergent-ambiguous-v2",
+  "intent": "clarify ambiguous language (v2)",
+  "ladderStage": "meaning",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "object_of_discussion"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask for clarification",
+  "examples": ["Could you clarify what you mean?"],
+  "stopCondition": "meaning"
+}

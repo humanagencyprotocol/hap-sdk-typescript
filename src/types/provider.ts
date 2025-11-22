@@ -95,3 +95,92 @@ export interface HapProvider {
    */
   sendFeedback(payload: FeedbackPayload): Promise<void>;
 }
+
+// ============================================================================
+// LocalHapProvider Types (v0.2)
+// ============================================================================
+
+/**
+ * Performance metrics for a blueprint.
+ *
+ * Used by LocalHapProvider to track blueprint effectiveness
+ * and enable data-driven selection strategies.
+ */
+export interface BlueprintMetrics {
+  /** Total number of times this blueprint was used */
+  totalUses: number;
+
+  /** Fraction of uses where stop was successfully resolved (0-1) */
+  resolutionRate: number;
+
+  /** Average number of turns to resolution */
+  averageTurns: number;
+
+  /** Optional: Average time to resolution in milliseconds */
+  averageTimeMs?: number;
+
+  /** Optional: Whether phase advanced after resolution */
+  phaseAdvanceRate?: number;
+}
+
+/**
+ * Blueprint selector function type.
+ *
+ * Integrators provide this function to LocalHapProvider to implement
+ * their own blueprint selection logic. The SDK provides infrastructure
+ * (loading, caching, metrics) but NO opinions on how to select.
+ *
+ * @param candidates - Array of matching blueprints (filtered by stage/mode/pattern)
+ * @param request - The inquiry request with optional metadata
+ * @param metrics - Performance metrics for all known blueprints
+ * @returns The selected blueprint to use
+ *
+ * @example Simple selector (always pick latest version)
+ * ```typescript
+ * const selector: BlueprintSelector = (candidates) => {
+ *   // Candidates are already sorted by version (desc)
+ *   return candidates[0];
+ * };
+ * ```
+ *
+ * @example Performance-based selector
+ * ```typescript
+ * const selector: BlueprintSelector = (candidates, request, metrics) => {
+ *   // Find candidate with best resolution rate
+ *   let best = candidates[0];
+ *   let bestRate = 0;
+ *
+ *   for (const candidate of candidates) {
+ *     const metric = metrics.get(candidate.id);
+ *     if (metric && metric.resolutionRate > bestRate) {
+ *       best = candidate;
+ *       bestRate = metric.resolutionRate;
+ *     }
+ *   }
+ *
+ *   return best;
+ * };
+ * ```
+ *
+ * @example Context-aware selector
+ * ```typescript
+ * const selector: BlueprintSelector = (candidates, request, metrics) => {
+ *   // Prefer different strategies based on complexity
+ *   if (request.complexitySignal && request.complexitySignal > 3) {
+ *     // High complexity: use most proven blueprint
+ *     return candidates.find(c => {
+ *       const m = metrics.get(c.id);
+ *       return m && m.totalUses > 10;
+ *     }) || candidates[0];
+ *   }
+ *
+ *   // Low complexity: try latest version
+ *   return candidates[0];
+ * };
+ * ```
+ */
+export type BlueprintSelector = (
+  candidates: InquiryBlueprint[],
+  request: InquiryRequest,
+  metrics: ReadonlyMap<string, BlueprintMetrics>
+) => InquiryBlueprint;
