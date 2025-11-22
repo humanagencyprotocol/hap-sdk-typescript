@@ -1,6 +1,6 @@
 # HAP SDK (TypeScript)
 
-The HAP SDK enforces mandatory human checkpoints in AI applications through a Stop→Ask→Proceed protocol. When AI encounters ambiguity or unclear goals, it must stop and request clarification—no proceeding until explicit human direction is received. All semantic content (context, questions, answers) stays strictly local; only structural signals (patterns, stages, domains) are shared with optional HAP services. Use it in production with centralized services or locally with file-based blueprints for privacy-preserving AI governance.
+The HAP SDK enforces mandatory human checkpoints in AI applications through a Stop→Ask→Proceed protocol. When AI encounters ambiguity or unclear goals, it must stop and request clarification using question blueprints—structured templates that ensure the right questions are asked at the right time. The SDK tracks question outcomes to optimize blueprint selection over time, improving clarification quality without compromising privacy. All semantic content (context, questions, answers) stays strictly local; only structural signals (patterns, stages, domains) are shared with optional HAP services. Use it in production with centralized services or locally with file-based blueprints for privacy-preserving AI governance.
 
 ---
 
