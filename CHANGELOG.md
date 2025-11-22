@@ -7,6 +7,101 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-11-22
+
+### Added
+
+#### LocalHapProvider (M5, M6)
+- `LocalHapProvider` class for file-based local development without HAP service
+- Blueprint loading from local directories and remote URLs
+- Blueprint caching for performance
+- Integration with `QuestionOutcomeLogger` for metrics
+- 29 tests covering loading, matching, and selection
+
+#### Blueprint Selection Strategies (M6)
+- `simpleLatestVersionSelector` - Always picks newest version
+- `bestPerformanceSelector` - Picks highest success rate
+- `balancedSelector` - Epsilon-greedy (ε=0.1) for exploration
+- `contextAwareSelector` - Uses metadata for smart selection
+- `createEpsilonGreedySelector()` - Configurable exploration
+- `createLRUSelector()` - Least-recently-used rotation
+- `BlueprintSelector` interface for custom strategies
+
+#### Metadata Helpers (M7)
+- `createRequestWithMetadata()` method in StopDetector
+- `StopPatterns` - Common pattern constants (15 patterns)
+- `Domains` - Domain classification constants (9 domains)
+- `ComplexityLevels` - Complexity scale (1-5)
+- `detectAmbiguityPattern()` - Auto-detect ambiguity
+- `classifyDomain()` - Domain classification from keywords
+- `estimateComplexity()` - Complexity scoring from signals
+- `createSessionContext()` - Build session metadata
+- 59 new tests (24 in StopDetector + 35 in metadata-helpers)
+
+#### Seed Blueprints (M6)
+- 13 comprehensive seed blueprints covering:
+  - All 4 ladder stages (meaning, purpose, intention, action)
+  - Both agency modes (convergent, reflective)
+  - Multiple patterns per stage
+- LLM prompt context in all blueprints
+- Ready-to-use for local development
+
+#### Documentation (M8)
+- Local Development Guide (`docs/LOCAL_DEVELOPMENT.md`)
+- Migration Guide (`docs/MIGRATION.md`)
+- Blueprint creation guide
+- Selection strategy documentation
+- Metrics interpretation guide
+
+#### Provider Abstraction (M5)
+- `HapProvider` interface extracted from HapClient
+- Unified interface for HapClient and LocalHapProvider
+- Same StopGuard code works with both providers
+
+### Changed
+
+#### Breaking Changes
+- **StopGuard configuration**: `client` parameter renamed to `provider`
+  ```typescript
+  // Before (v0.1.x)
+  const stopGuard = new StopGuard({ client: hapClient, questionEngine });
+
+  // After (v0.2.x)
+  const stopGuard = new StopGuard({ provider: hapProvider, questionEngine });
+  ```
+
+#### Enhanced Types
+- Extended `InquiryRequest` with optional metadata fields:
+  - `stopPattern?: string` - Pattern identifier (kebab-case)
+  - `domain?: string` - Domain classification (kebab-case)
+  - `complexitySignal?: number` - Complexity (1-5 scale)
+  - `sessionContext?: object` - Session tracking metrics
+- Extended `InquiryBlueprint` with optional `promptContext` for LLM guidance
+- New `BlueprintMetrics` interface for performance tracking
+
+### Fixed
+- Blueprint version sorting now properly handles v1, v2, etc.
+- Metadata validation ensures privacy-safe structural signals only
+
+### Test Coverage
+- **Total Tests:** 278 tests passing (+88 from v0.1.0)
+- **New Test Coverage:**
+  - LocalHapProvider: 29 tests
+  - Metadata helpers: 35 tests
+  - StopDetector metadata: 24 tests
+- **Coverage:** Maintained 85%+ overall
+
+### Migration Guide
+See [docs/MIGRATION.md](./docs/MIGRATION.md) for detailed upgrade instructions.
+
+**Quick Migration:**
+1. Replace `client:` with `provider:` in StopGuard config
+2. Test existing functionality (should work unchanged)
+3. Optionally adopt LocalHapProvider for development
+4. Optionally use metadata helpers for better blueprint selection
+
+---
+
 ## [0.1.0] - 2025-11-21
 
 ### Added
