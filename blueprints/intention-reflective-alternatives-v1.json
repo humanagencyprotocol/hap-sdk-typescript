@@ -1,0 +1,31 @@
+{
+  "id": "intention-reflective-alternatives-v1",
+  "intent": "explore alternative approaches",
+  "ladderStage": "intention",
+  "agencyMode": "reflective",
+  "targetStructures": [
+    "alternative_approaches",
+    "unconsidered_options"
+  ],
+  "constraints": {
+    "tone": "exploratory",
+    "addressing": "individual"
+  },
+  "renderHint": "Invite exploration of alternative approaches",
+  "examples": [
+    "Have you considered other approaches?",
+    "What might be an alternative way to achieve this?",
+    "Are there paths you haven't explored yet?"
+  ],
+  "stopCondition": "approach",
+  "promptContext": {
+    "role": "You are helping the user explore alternative approaches they may not have considered.",
+    "task": "Generate a reflective question that invites consideration of different paths or methods.",
+    "constraints": [
+      "Use an exploratory, open-ended tone",
+      "Encourage creative thinking about alternatives",
+      "Don't suggest specific alternatives, just prompt exploration"
+    ],
+    "format": "An open question that promotes thinking about alternatives"
+  }
+}

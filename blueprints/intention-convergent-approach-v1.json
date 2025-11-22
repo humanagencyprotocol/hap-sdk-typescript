@@ -1,0 +1,31 @@
+{
+  "id": "intention-convergent-approach-v1",
+  "intent": "clarify approach when multiple paths exist",
+  "ladderStage": "intention",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "approach_selection",
+    "path_preference"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask which approach or path to take",
+  "examples": [
+    "Which approach would you prefer?",
+    "Do you want to tackle this incrementally or all at once?",
+    "Should we prioritize speed or thoroughness?"
+  ],
+  "stopCondition": "approach",
+  "promptContext": {
+    "role": "You are helping the user choose between multiple valid approaches.",
+    "task": "Generate a question that presents the key decision points and asks the user to select their preferred path.",
+    "constraints": [
+      "Present the choice clearly without bias",
+      "Use a facilitative tone",
+      "Focus on approach, not implementation details"
+    ],
+    "format": "A question that presents options and asks for preference"
+  }
+}

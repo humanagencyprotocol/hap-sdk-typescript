@@ -1,0 +1,32 @@
+{
+  "id": "action-reflective-consequences-v1",
+  "intent": "explore action consequences and implications",
+  "ladderStage": "action",
+  "agencyMode": "reflective",
+  "targetStructures": [
+    "consequences",
+    "side_effects",
+    "implications"
+  ],
+  "constraints": {
+    "tone": "exploratory",
+    "addressing": "individual"
+  },
+  "renderHint": "Invite reflection on consequences",
+  "examples": [
+    "What might be the consequences of this action?",
+    "Have you considered the implications?",
+    "What could be the unintended effects?"
+  ],
+  "stopCondition": "specifics",
+  "promptContext": {
+    "role": "You are helping the user consider the consequences and implications of the proposed action.",
+    "task": "Generate a reflective question that invites consideration of outcomes, side effects, or implications.",
+    "constraints": [
+      "Use an exploratory, thoughtful tone",
+      "Focus on consequences, not the action itself",
+      "Encourage thinking about downstream effects"
+    ],
+    "format": "An open question about consequences or implications"
+  }
+}

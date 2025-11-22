@@ -1,0 +1,31 @@
+{
+  "id": "meaning-convergent-unclear-v1",
+  "intent": "clarify unclear or vague terms",
+  "ladderStage": "meaning",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "vague_quantifier",
+    "unclear_term"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask for clarification on vague or unclear terms",
+  "examples": [
+    "What specifically do you mean by 'better'?",
+    "Can you define what 'many' means in this context?",
+    "What does 'soon' mean for your timeline?"
+  ],
+  "stopCondition": "meaning",
+  "promptContext": {
+    "role": "You are helping clarify vague or unclear terms in the user's request.",
+    "task": "Generate a question that asks the user to be more specific about vague quantifiers or unclear terminology.",
+    "constraints": [
+      "Focus on the specific vague term",
+      "Use a facilitative, non-judgmental tone",
+      "Ask for concrete definitions or examples"
+    ],
+    "format": "A single, direct question that addresses the vagueness"
+  }
+}

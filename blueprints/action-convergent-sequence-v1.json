@@ -1,0 +1,32 @@
+{
+  "id": "action-convergent-sequence-v1",
+  "intent": "clarify action sequence or order",
+  "ladderStage": "action",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "action_sequence",
+    "execution_order",
+    "step_dependencies"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask about action order or sequence",
+  "examples": [
+    "In what order should I perform these actions?",
+    "Which step should come first?",
+    "What's the correct sequence?"
+  ],
+  "stopCondition": "specifics",
+  "promptContext": {
+    "role": "You are helping clarify the order or sequence in which actions should be performed.",
+    "task": "Generate a question that asks about the sequence, order, or dependencies between steps.",
+    "constraints": [
+      "Focus on sequence and ordering",
+      "Use a facilitative tone",
+      "Ask about what comes first or in what order"
+    ],
+    "format": "A question about action sequence or order"
+  }
+}

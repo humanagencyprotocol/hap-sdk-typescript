@@ -1,0 +1,31 @@
+{
+  "id": "purpose-convergent-goal-v1",
+  "intent": "clarify missing or unclear goal",
+  "ladderStage": "purpose",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "goal_definition",
+    "desired_state"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask about the goal or desired end state",
+  "examples": [
+    "What goal are you trying to achieve?",
+    "What's the desired end state?",
+    "What problem are you trying to solve?"
+  ],
+  "stopCondition": "direction",
+  "promptContext": {
+    "role": "You are helping the user articulate their goal or desired outcome.",
+    "task": "Generate a question that helps the user define what they're trying to achieve.",
+    "constraints": [
+      "Focus on the end goal, not the means",
+      "Use a facilitative tone",
+      "Ask about desired state or problem to solve"
+    ],
+    "format": "A single question focused on goal clarification"
+  }
+}

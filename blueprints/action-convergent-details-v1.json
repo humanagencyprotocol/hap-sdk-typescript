@@ -1,0 +1,32 @@
+{
+  "id": "action-convergent-details-v1",
+  "intent": "clarify missing action details",
+  "ladderStage": "action",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "action_parameters",
+    "specific_steps",
+    "concrete_details"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask for specific action details",
+  "examples": [
+    "What specific steps should I take?",
+    "Can you provide more details about how to proceed?",
+    "What are the exact parameters for this action?"
+  ],
+  "stopCondition": "specifics",
+  "promptContext": {
+    "role": "You are helping the user provide specific action details needed to proceed.",
+    "task": "Generate a question that asks for concrete, actionable details or parameters.",
+    "constraints": [
+      "Focus on specific, actionable details",
+      "Use a facilitative tone",
+      "Ask for concrete parameters or steps"
+    ],
+    "format": "A question requesting specific action details"
+  }
+}

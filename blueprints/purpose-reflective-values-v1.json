@@ -1,0 +1,31 @@
+{
+  "id": "purpose-reflective-values-v1",
+  "intent": "explore underlying values and priorities",
+  "ladderStage": "purpose",
+  "agencyMode": "reflective",
+  "targetStructures": [
+    "underlying_values",
+    "priority_tradeoffs"
+  ],
+  "constraints": {
+    "tone": "exploratory",
+    "addressing": "individual"
+  },
+  "renderHint": "Invite reflection on values and priorities",
+  "examples": [
+    "What's most important to you in this situation?",
+    "What values are driving this decision?",
+    "What are you willing to trade off?"
+  ],
+  "stopCondition": "direction",
+  "promptContext": {
+    "role": "You are helping the user explore underlying values and priorities.",
+    "task": "Generate a reflective question that helps uncover what really matters to the user.",
+    "constraints": [
+      "Use an exploratory, open-ended tone",
+      "Focus on values and priorities, not tactics",
+      "Encourage deeper reflection on what matters"
+    ],
+    "format": "An open question that promotes values exploration"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "intention-convergent-constraints-v1",
+  "intent": "clarify missing constraints or boundaries",
+  "ladderStage": "intention",
+  "agencyMode": "convergent",
+  "targetStructures": [
+    "constraints",
+    "boundaries",
+    "limitations"
+  ],
+  "constraints": {
+    "tone": "facilitative",
+    "addressing": "individual"
+  },
+  "renderHint": "Ask about constraints or limitations",
+  "examples": [
+    "Are there any constraints I should be aware of?",
+    "What are the boundaries for this work?",
+    "Are there any limitations or requirements?"
+  ],
+  "stopCondition": "approach",
+  "promptContext": {
+    "role": "You are helping identify constraints or boundaries for the approach.",
+    "task": "Generate a question that helps the user articulate constraints, limitations, or requirements.",
+    "constraints": [
+      "Focus on what's not allowed or limited",
+      "Use a facilitative tone",
+      "Ask about boundaries, not preferences"
+    ],
+    "format": "A question about constraints or limitations"
+  }
+}
