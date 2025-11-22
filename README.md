@@ -8,7 +8,7 @@ TypeScript/JavaScript SDK for the [Human Agency Protocol](https://humanagencypro
 
 **Version:** 0.2.0
 **Protocol Version:** 0.1
-**Status:** Released
+**Status:** Development
 
 **Latest Changes (v0.2.0):**
 - **LocalHapProvider** - File-based local development without HAP service
